@@ -100,21 +100,18 @@ namespace BulkyBookWeb.Controllers
         }
 
         //POST
-        [HttpPost]
+        [HttpPost,ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(Category obj)
+        public IActionResult DeletePOST(int? id)
         {
-            if (obj.Name == obj.DispalyOrder.ToString())
+            var obj = _db.Categories.Find(id);
+            if (obj == null)
             {
-                ModelState.AddModelError("name", "The DisplayOrder cannot exactly match the Name.");
+                return NotFound();
             }
-            if (ModelState.IsValid)
-            {
-                _db.Categories.Remove(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(obj);
+            _db.Categories.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
